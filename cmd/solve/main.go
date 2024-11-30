@@ -1,7 +1,8 @@
 package main
 
 import (
-	"adventofcode2024/pkg/aoc"
+	"adventofcode2024/days/day01"
+	"flag"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -14,8 +15,14 @@ func main() {
 		log.Fatalf("can't read .env: %v\n", err)
 	}
 
-	_, err = aoc.Get(1)
-	if err != nil {
-		log.Fatalf("can't get input: %v\n", err)
+	day := flag.Int("day", 1, "day to solve")
+	part := flag.Int("part", 1, "part to solve")
+	flag.Parse()
+
+	switch *day {
+	case 1:
+		day01.Solve(*part)
+	default:
+		log.Printf("Day %d, part: %d not solved yet", *day, *part)
 	}
 }
