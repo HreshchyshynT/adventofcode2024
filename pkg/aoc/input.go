@@ -68,8 +68,7 @@ func readInput(path string) ([]string, error) {
 
 func getFromServer(day int) ([]string, error) {
 	var client http.Client
-	// TODO: change year to 2024
-	url := fmt.Sprintf("https://adventofcode.com/2021/day/%d/input", day)
+	url := fmt.Sprintf("https://adventofcode.com/2024/day/%d/input", day)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 
