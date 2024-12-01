@@ -14,16 +14,7 @@ func Solve(part int) {
 	if err != nil {
 		log.Fatal("error getting input for day 1")
 	}
-	switch part {
-	case 1:
-		part1(input)
-	case 2:
-		part2(input)
-	}
 
-}
-
-func part1(input []string) {
 	left := make([]int, len(input))
 	right := make([]int, len(input))
 
@@ -40,6 +31,16 @@ func part1(input []string) {
 	slices.SortFunc(left, cmp)
 	slices.SortFunc(right, cmp)
 
+	switch part {
+	case 1:
+		part1(left, right)
+	case 2:
+		part2(left, right)
+	}
+
+}
+
+func part1(left, right []int) {
 	total := 0
 
 	for i, n := range left {
@@ -49,8 +50,34 @@ func part1(input []string) {
 	fmt.Printf("part 1 solution: %d\n", total)
 }
 
-func part2(input []string) {
+func part2(left, right []int) {
+	total := 0
 
+	for _, n := range left {
+		total += n * timesInArray(n, right)
+	}
+	fmt.Printf("part 2 solution: %d\n", total)
+}
+
+func timesInArray(what int, where []int) int {
+	times := 0
+	l, r := 0, len(where)-1
+
+	for r-l > 1 {
+		mid := l + (r-l)/2
+		if where[mid] < what {
+			l = mid
+		} else {
+			r = mid
+		}
+	}
+
+	for where[r] == what {
+		times++
+		r++
+	}
+
+	return times
 }
 
 func absDiff(l, r int) int {
