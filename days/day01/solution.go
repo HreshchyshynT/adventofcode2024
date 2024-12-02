@@ -1,20 +1,12 @@
 package day01
 
 import (
-	"adventofcode2024/pkg/aoc"
 	"adventofcode2024/pkg/utils"
 	"fmt"
-	"log"
 	"slices"
 )
 
-func Solve(part int) {
-	log.Printf("solving 1st day, part: %d", part)
-	input, err := aoc.Get(1)
-	if err != nil {
-		log.Fatal("error getting input for day 1")
-	}
-
+func Solve(input []string) {
 	left := make([]int, len(input))
 	right := make([]int, len(input))
 
@@ -31,20 +23,15 @@ func Solve(part int) {
 	slices.SortFunc(left, cmp)
 	slices.SortFunc(right, cmp)
 
-	switch part {
-	case 1:
-		part1(left, right)
-	case 2:
-		part2(left, right)
-	}
-
+	part1(left, right)
+	part2(left, right)
 }
 
 func part1(left, right []int) {
 	total := 0
 
 	for i, n := range left {
-		total += absDiff(n, right[i])
+		total += utils.AbsDiff(n, right[i])
 	}
 
 	fmt.Printf("part 1 solution: %d\n", total)
@@ -78,12 +65,4 @@ func timesInArray(what int, where []int) int {
 	}
 
 	return times
-}
-
-func absDiff(l, r int) int {
-	result := l - r
-	if result < 0 {
-		result *= -1
-	}
-	return result
 }

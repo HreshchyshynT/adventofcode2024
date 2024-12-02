@@ -2,6 +2,8 @@ package main
 
 import (
 	"adventofcode2024/days/day01"
+	"adventofcode2024/days/day02"
+	"adventofcode2024/pkg/aoc"
 	"flag"
 	"log"
 
@@ -16,13 +18,21 @@ func main() {
 	}
 
 	day := flag.Int("day", 1, "day to solve")
-	part := flag.Int("part", 1, "part to solve")
 	flag.Parse()
+
+	log.Printf("solving day: %d", *day)
+
+	input, err := aoc.Get(*day)
+	if err != nil {
+		log.Fatal("error getting input for day 1")
+	}
 
 	switch *day {
 	case 1:
-		day01.Solve(*part)
+		day01.Solve(input)
+	case 2:
+		day02.Solve(input)
 	default:
-		log.Printf("Day %d, part: %d not solved yet", *day, *part)
+		log.Printf("Day %d not solved yet", *day)
 	}
 }
