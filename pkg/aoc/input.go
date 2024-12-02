@@ -10,7 +10,7 @@ import (
 )
 
 func Get(day int) (input []string, err error) {
-	inputPath, exists := getInputPath(1)
+	inputPath, exists := getInputPath(day)
 
 	if exists {
 		input, err = readInput(inputPath)
