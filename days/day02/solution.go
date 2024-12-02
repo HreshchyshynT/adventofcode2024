@@ -3,6 +3,7 @@ package day02
 import (
 	"adventofcode2024/pkg/utils"
 	"log"
+	"slices"
 )
 
 func Solve(input []string) {
@@ -15,30 +16,63 @@ func Solve(input []string) {
 func part1(input [][]int) int {
 	var result int
 	for _, nums := range input {
-		check := func(left, right int) bool {
-			return right >= left || left-right > 3
-		}
-		if nums[0] < nums[1] {
-			check = func(left, right int) bool {
-				return left >= right || right-left > 3
-			}
-		}
-		result++
-
-		prev := nums[0]
-		for _, n := range nums[1:] {
-			if check(prev, n) {
-				result--
-				break
-			}
-			prev = n
+		if isValidSequence(nums) {
+			result++
 		}
 	}
 	return result
 }
 
-func part2(_ [][]int) int {
-	return 0
+func part2(input [][]int) int {
+	var result int
+	for _, nums := range input {
+		for i := range nums {
+			if isValidSequence(nums, i) {
+				result++
+				break
+			}
+		}
+	}
+	return result
+}
+
+func isValidSequence(nums []int, exclude ...int) bool {
+	var breaksSequence func(int, int) bool
+	for i := 0; i < len(nums); i++ {
+		if slices.Contains(exclude, i) {
+			continue
+		}
+		prevIndex := i - 1
+		if slices.Contains(exclude, prevIndex) {
+			prevIndex--
+		}
+		if prevIndex < 0 {
+			continue
+		}
+
+		if breaksSequence == nil {
+			breaksSequence = isBreakingDec
+			if nums[prevIndex] < nums[i] {
+				breaksSequence = isBreakingInc
+			}
+		}
+
+		prev := nums[prevIndex]
+		current := nums[i]
+
+		if breaksSequence(prev, current) {
+			return false
+		}
+	}
+	return true
+}
+
+func isBreakingDec(left, right int) bool {
+	return right >= left || left-right > 3
+}
+
+func isBreakingInc(left, right int) bool {
+	return left >= right || right-left > 3
 }
 
 func parseInput(input []string) [][]int {
