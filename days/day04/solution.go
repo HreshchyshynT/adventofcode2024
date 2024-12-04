@@ -1,6 +1,8 @@
 package day04
 
-import "log"
+import (
+	"log"
+)
 
 const (
 	TOP       = 0
@@ -25,22 +27,6 @@ var allDirections = []Direction{
 }
 
 type Direction int
-
-func (d Direction) isUp() bool {
-	return d == TOP || d == TOP_RIGHT || d == TOP_LEFT
-}
-
-func (d Direction) isDown() bool {
-	return d == BOT_LEFT || d == BOT || d == BOT_RIGHT
-}
-
-func (d Direction) isRight() bool {
-	return d == TOP_RIGHT || d == RIGHT || d == BOT_RIGHT
-}
-
-func (d Direction) isLeft() bool {
-	return d == TOP_LEFT || d == LEFT || d == BOT_LEFT
-}
 
 func (d Direction) shift(x, y int) (int, int) {
 	switch d {
@@ -86,78 +72,21 @@ func (f *Field) maxX() int {
 	return len((*f)[0]) - 1
 }
 
-func (f *Field) has(what rune, x, y int, direction Direction) bool {
-	if direction.isUp() && y == 0 {
-		return false
-	}
-
-	if direction.isDown() && y == f.maxY() {
-		return false
-	}
-
-	if direction.isRight() && x == f.maxX() {
-		return false
-	}
-
-	if direction.isLeft() && x == 0 {
-		return false
-	}
-
-	x, y = direction.shift(x, y)
-
-	return (*f)[y][x] == what
+func (f *Field) contains(x, y int) bool {
+	return x >= 0 && x <= f.maxX() && y >= 0 && y <= f.maxY()
 }
-func (f *Field) hasXmas(x, y int, direction Direction) bool {
-	if (*f)[y][x] != 'X' {
-		return false
-	}
-	if !f.has('M', x, y, direction) {
-		return false
-	}
 
-	x, y = direction.shift(x, y)
-	if !f.has('A', x, y, direction) {
-		return false
-	}
-
-	x, y = direction.shift(x, y)
-	if !f.has('S', x, y, direction) {
-		return false
+func (f *Field) hasWord(x, y int, word []rune, direction Direction) bool {
+	for _, r := range word {
+		if !f.contains(x, y) || (*f)[y][x] != r {
+			return false
+		}
+		x, y = direction.shift(x, y)
 	}
 
 	return true
 }
 
-func (f *Field) hasXdMases(x, y int) bool {
-	if (*f)[y][x] != 'A' {
-		return false
-	}
-
-	if !f.has('M', x, y, TOP_LEFT) && !f.has('S', x, y, TOP_LEFT) {
-		return false
-	}
-	if !f.has('M', x, y, TOP_RIGHT) && !f.has('S', x, y, TOP_RIGHT) {
-		return false
-	}
-
-	if f.has('M', x, y, TOP_LEFT) && !f.has('S', x, y, BOT_RIGHT) {
-		return false
-	}
-	if f.has('M', x, y, TOP_RIGHT) && !f.has('S', x, y, BOT_LEFT) {
-		return false
-	}
-
-	if f.has('S', x, y, TOP_LEFT) && !f.has('M', x, y, BOT_RIGHT) {
-		return false
-	}
-	if f.has('S', x, y, TOP_RIGHT) && !f.has('M', x, y, BOT_LEFT) {
-		return false
-	}
-
-	return true
-}
-
-// 415 - too low
 func Solve(input []string) {
 	field := NewField(input)
 
@@ -167,11 +96,12 @@ func Solve(input []string) {
 
 func part1(field *Field) int {
 	var result int
+	word := []rune{'X', 'M', 'A', 'S'}
 
 	for y, line := range *field {
 		for x := range line {
 			for _, d := range allDirections {
-				if field.hasXmas(x, y, d) {
+				if field.hasWord(x, y, word, d) {
 					result++
 				}
 			}
@@ -182,9 +112,19 @@ func part1(field *Field) int {
 func part2(field *Field) int {
 	var result int
 
-	for y, line := range *field {
-		for x := range line {
-			if field.hasXdMases(x, y) {
+	mas, sam := []rune{'M', 'A', 'S'}, []rune{'S', 'A', 'M'}
+
+	for y := 0; y <= field.maxY()-2; y++ {
+		for x := 0; x <= field.maxX()-2; x++ {
+
+			hasMas := field.hasWord(x, y, mas, BOT_RIGHT)
+			hasSam := field.hasWord(x, y, sam, BOT_RIGHT)
+			if !hasMas && !hasSam {
+				continue
+			}
+			hasSam = field.hasWord(x+2, y, sam, BOT_LEFT)
+			hasMas = field.hasWord(x+2, y, mas, BOT_LEFT)
+			if hasMas || hasSam {
 				result++
 			}
 		}
