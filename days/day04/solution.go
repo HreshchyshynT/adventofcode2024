@@ -128,27 +128,36 @@ func (f *Field) hasXmas(x, y int, direction Direction) bool {
 	return true
 }
 
-func (f *Field) hasXdMases(x, y int, direction Direction) bool {
-	if (*f)[y][x] != 'X' {
-		return false
-	}
-	if !f.has('M', x, y, direction) {
+func (f *Field) hasXdMases(x, y int) bool {
+	if (*f)[y][x] != 'A' {
 		return false
 	}
 
-	x, y = direction.shift(x, y)
-	if !f.has('A', x, y, direction) {
+	if !f.has('M', x, y, TOP_LEFT) && !f.has('S', x, y, TOP_LEFT) {
+		return false
+	}
+	if !f.has('M', x, y, TOP_RIGHT) && !f.has('S', x, y, TOP_RIGHT) {
 		return false
 	}
 
-	x, y = direction.shift(x, y)
-	if !f.has('S', x, y, direction) {
+	if f.has('M', x, y, TOP_LEFT) && !f.has('S', x, y, BOT_RIGHT) {
+		return false
+	}
+	if f.has('M', x, y, TOP_RIGHT) && !f.has('S', x, y, BOT_LEFT) {
+		return false
+	}
+
+	if f.has('S', x, y, TOP_LEFT) && !f.has('M', x, y, BOT_RIGHT) {
+		return false
+	}
+	if f.has('S', x, y, TOP_RIGHT) && !f.has('M', x, y, BOT_LEFT) {
 		return false
 	}
 
 	return true
 }
 
+// 415 - too low
 func Solve(input []string) {
 	field := NewField(input)
 
@@ -175,10 +184,8 @@ func part2(field *Field) int {
 
 	for y, line := range *field {
 		for x := range line {
-			for _, d := range allDirections {
-				if field.hasXdMases(x, y, d) {
-					result++
-				}
+			if field.hasXdMases(x, y) {
+				result++
 			}
 		}
 	}
