@@ -42,4 +42,11 @@ func TestExample(t *testing.T) {
 			t.Errorf("want %d got %d", want, got)
 		}
 	})
+	t.Run("part2", func(t *testing.T) {
+		want := 123
+		got := part2(strings.Split(input, "\n"))
+		if want != got {
+			t.Errorf("want %d got %d", want, got)
+		}
+	})
 }
