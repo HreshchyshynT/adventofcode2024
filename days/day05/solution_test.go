@@ -34,17 +34,18 @@ func TestExample(t *testing.T) {
 75,97,47,61,53
 61,13,29
 97,13,75,29,47`
+	rules, numbers := parseInput(strings.Split(input, "\n"))
 
 	t.Run("part1", func(t *testing.T) {
 		want := 143
-		got := part1(strings.Split(input, "\n"))
+		got := part1(rules, numbers)
 		if want != got {
 			t.Errorf("want %d got %d", want, got)
 		}
 	})
 	t.Run("part2", func(t *testing.T) {
 		want := 123
-		got := part2(strings.Split(input, "\n"))
+		got := part2(rules, numbers)
 		if want != got {
 			t.Errorf("want %d got %d", want, got)
 		}
