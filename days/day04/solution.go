@@ -1,58 +1,9 @@
 package day04
 
 import (
+	"adventofcode2024/pkg/utils"
 	"log"
 )
-
-const (
-	TOP       = 0
-	TOP_RIGHT = 1
-	RIGHT     = 2
-	BOT_RIGHT = 3
-	BOT       = 4
-	BOT_LEFT  = 5
-	LEFT      = 6
-	TOP_LEFT  = 7
-)
-
-var allDirections = []Direction{
-	TOP,
-	TOP_RIGHT,
-	RIGHT,
-	BOT_RIGHT,
-	BOT,
-	BOT_LEFT,
-	LEFT,
-	TOP_LEFT,
-}
-
-type Direction int
-
-func (d Direction) shift(x, y int) (int, int) {
-	switch d {
-	case TOP:
-		y--
-	case TOP_RIGHT:
-		y--
-		x++
-	case RIGHT:
-		x++
-	case BOT_RIGHT:
-		y++
-		x++
-	case BOT:
-		y++
-	case BOT_LEFT:
-		y++
-		x--
-	case LEFT:
-		x--
-	case TOP_LEFT:
-		y--
-		x--
-	}
-	return x, y
-}
 
 type Field [][]rune
 
@@ -76,12 +27,12 @@ func (f *Field) contains(x, y int) bool {
 	return x >= 0 && x <= f.maxX() && y >= 0 && y <= f.maxY()
 }
 
-func (f *Field) hasWord(x, y int, word []rune, direction Direction) bool {
+func (f *Field) hasWord(x, y int, word []rune, direction utils.Direction) bool {
 	for _, r := range word {
 		if !f.contains(x, y) || (*f)[y][x] != r {
 			return false
 		}
-		x, y = direction.shift(x, y)
+		x, y = direction.Shift(x, y)
 	}
 
 	return true
@@ -100,7 +51,7 @@ func part1(field *Field) int {
 
 	for y, line := range *field {
 		for x := range line {
-			for _, d := range allDirections {
+			for _, d := range utils.AllDirections {
 				if field.hasWord(x, y, word, d) {
 					result++
 				}
@@ -117,13 +68,13 @@ func part2(field *Field) int {
 	for y := 0; y <= field.maxY()-2; y++ {
 		for x := 0; x <= field.maxX()-2; x++ {
 
-			hasMas := field.hasWord(x, y, mas, BOT_RIGHT)
-			hasSam := field.hasWord(x, y, sam, BOT_RIGHT)
+			hasMas := field.hasWord(x, y, mas, utils.BOT_RIGHT)
+			hasSam := field.hasWord(x, y, sam, utils.BOT_RIGHT)
 			if !hasMas && !hasSam {
 				continue
 			}
-			hasSam = field.hasWord(x+2, y, sam, BOT_LEFT)
-			hasMas = field.hasWord(x+2, y, mas, BOT_LEFT)
+			hasSam = field.hasWord(x+2, y, sam, utils.BOT_LEFT)
+			hasMas = field.hasWord(x+2, y, mas, utils.BOT_LEFT)
 			if hasMas || hasSam {
 				result++
 			}
