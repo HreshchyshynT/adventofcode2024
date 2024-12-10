@@ -21,10 +21,10 @@ func part1(line string) int {
 	expandedIndex := 0
 	for left < right {
 		if files == 0 && right%2 == 0 {
-			files = utils.RuneParseInt(runes[right])
+			files = utils.IntParseRune(runes[right])
 		}
 		if empties == 0 && left%2 != 0 {
-			empties = utils.RuneParseInt(runes[left])
+			empties = utils.IntParseRune(runes[left])
 		}
 
 		if files == 0 {
@@ -33,7 +33,7 @@ func part1(line string) int {
 		if empties == 0 {
 			if left%2 == 0 {
 				// it is file, add to checksum
-				count := utils.RuneParseInt(runes[left])
+				count := utils.IntParseRune(runes[left])
 				result += findSumFor(leftId, expandedIndex, count)
 				leftId += 1
 				expandedIndex += count
