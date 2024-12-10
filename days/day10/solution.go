@@ -19,7 +19,7 @@ var availableDirections = []utils.Direction{
 func Solve(input []string) {
 
 	log.Printf("day 10 part 1: %d", part1(parseInput(input)))
-	log.Printf("day 10 part 1: %d", part1(parseInput(input)))
+	log.Printf("day 10 part 2: %d", part2(parseInput(input)))
 }
 
 func parseInput(input []string) [][]rune {
@@ -48,8 +48,18 @@ func part1(input [][]rune) int {
 }
 
 func part2(input [][]rune) int {
+	var result int
+	for y, line := range input {
+		for x, r := range line {
+			height := utils.IntParseRune(r)
+			if height > 0 {
+				continue
+			}
+			result += getHickingTrailsCount(input, x, y)
+		}
+	}
 
-	return 0
+	return result
 }
 
 func getHickingTrailsCount(runes [][]rune, x, y int) int {
