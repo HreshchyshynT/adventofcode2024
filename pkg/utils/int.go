@@ -7,3 +7,7 @@ func AbsDiff(l, r int) int {
 	}
 	return result
 }
+
+func RuneParseInt(r rune) int {
+	return int(r - '0')
+}
