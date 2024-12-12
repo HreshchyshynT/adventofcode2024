@@ -10,6 +10,7 @@ import (
 	"adventofcode2024/days/day09"
 	"adventofcode2024/days/day10"
 	"adventofcode2024/days/day11"
+	"adventofcode2024/days/day12"
 	"adventofcode2024/pkg/aoc"
 	"flag"
 	"log"
@@ -51,6 +52,8 @@ func main() {
 		day10.Solve(input)
 	case 11:
 		day11.Solve(input)
+	case 12:
+		day12.Solve(input)
 	default:
 		log.Printf("Day %d not solved yet", *day)
 	}
